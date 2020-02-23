@@ -26,9 +26,9 @@ from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 
 # Initialize Qt resources from file resources.py
-from .resources import *
+from .build.resources import *
 # Import the code for the dialog
-from .epic_maps_dialog import EpicMapsDialog
+from .gui.epic_maps_dialog import EpicMapsDialog
 import os.path
 
 

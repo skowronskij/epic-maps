@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/epic_maps" >
-        <file>icon.png</file>
-    </qresource>
-</RCC>
