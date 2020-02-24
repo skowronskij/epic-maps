@@ -3,4 +3,6 @@ class StyleSettings:
     title = None
     author = None
     layers = None
+    orientation = None
+    size = None
     
