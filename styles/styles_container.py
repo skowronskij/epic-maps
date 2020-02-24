@@ -7,6 +7,6 @@ class StylesContainer:
         self.style_settings = style_settings
 
     @property
-    def style_class(self):
+    def get_style(self):
         style_class = self.STYLE_DICT.get(self.style_settings.mapstyle)
         return style_class(self.style_settings)
