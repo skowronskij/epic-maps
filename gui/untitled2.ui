@@ -13,62 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>15</y>
-     <width>121</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Map name:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>20</y>
-     <width>251</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>55</y>
-     <width>121</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Author: </string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>60</y>
-     <width>251</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
@@ -79,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>OK</string>
    </property>
   </widget>
   <widget class="QTableView" name="tableView">
@@ -91,6 +35,64 @@
      <height>151</height>
     </rect>
    </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>15</y>
+     <width>361</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Map name:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEdit"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>60</y>
+     <width>341</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Author: </string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEdit_2"/>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

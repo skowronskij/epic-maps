@@ -13,34 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>20</y>
-     <width>241</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Choose map style:</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBox">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>100</y>
-     <width>321</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
@@ -53,6 +25,35 @@
    <property name="text">
     <string>Next</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>20</y>
+     <width>351</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Choose map style:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="comboBox"/>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
