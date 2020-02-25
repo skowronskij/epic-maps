@@ -27,9 +27,13 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 
+from .epic_maps_widget1 import EpicMapsWidget1
+from .epic_maps_widget2 import EpicMapsWidget2
+from .epic_maps_widget3 import EpicMapsWidget3
+
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'epic_maps_dialog_base.ui'))
+    os.path.dirname(__file__), 'epic_maps_dialog.ui'))
 
 
 class EpicMapsDialog(QtWidgets.QDialog, FORM_CLASS):
@@ -41,4 +45,34 @@ class EpicMapsDialog(QtWidgets.QDialog, FORM_CLASS):
         # self.<objectname>, and you can use autoconnect slots - see
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
+        
+        self.widget1 = EpicMapsWidget1(parent=self)
+        self.widget2 = EpicMapsWidget2(parent=self)
+        self.widget3 = EpicMapsWidget3(parent=self)
+        self.hideallwidgets()
+
         self.setupUi(self)
+        self.widget1.show()
+
+        self.widget1.Next1.clicked.connect(self.changewidgetto2)
+        self.widget2.Next2.clicked.connect(self.changewidgetto3)
+        self.widget2.Previous2.clicked.connect(self.changewidgetto1)
+        self.widget3.Previous3.clicked.connect(self.changewidgetto2)
+        
+    def changewidgetto1(self):
+        self.hideallwidgets()
+        self.widget1.show()
+    
+    def changewidgetto2(self):
+        self.hideallwidgets()
+        self.widget2.show()
+        
+    def changewidgetto3(self):
+        self.hideallwidgets()
+        self.widget3.show()
+
+    def hideallwidgets(self):
+        self.widget1.hide()
+        self.widget2.hide()
+        self.widget3.hide()
+
