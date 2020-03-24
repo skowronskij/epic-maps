@@ -24,12 +24,15 @@
 
 import os
 
+from qgis.core import QgsLayoutItemPage, QgsProject
 from qgis.PyQt import uic
-from qgis.PyQt import QtWidgets
+from qgis.PyQt import QtWidgets, QtGui
 
 from .epic_maps_widget1 import EpicMapsWidget1
 from .epic_maps_widget2 import EpicMapsWidget2
 from .epic_maps_widget3 import EpicMapsWidget3
+from ..styles.styles_container import StylesContainer
+from ..styles.style_settings import StyleSettings
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -58,6 +61,11 @@ class EpicMapsDialog(QtWidgets.QDialog, FORM_CLASS):
         self.widget2.Next2.clicked.connect(self.changewidgetto3)
         self.widget2.Previous2.clicked.connect(self.changewidgetto1)
         self.widget3.Previous3.clicked.connect(self.changewidgetto2)
+        self.widget3.OK.clicked.connect(self.run)
+
+        self.selectStyle()
+        self.pageOrientation()
+        self.addItems()
         
     def changewidgetto1(self):
         self.hideallwidgets()
@@ -75,4 +83,35 @@ class EpicMapsDialog(QtWidgets.QDialog, FORM_CLASS):
         self.widget1.hide()
         self.widget2.hide()
         self.widget3.hide()
+
+    def selectStyle(self):
+        self.styles_container = StylesContainer
+        self.widget1.comboBox.addItems(list(self.styles_container.STYLE_DICT.keys()))
+
+    def pageOrientation(self):
+        self.SIZE_DICT = {"landscape": QgsLayoutItemPage.Orientation.Landscape, "portrait": QgsLayoutItemPage.Orientation.Portrait}
+        self.widget2.comboBox_2.addItems(list(self.SIZE_DICT.keys()))
+
+    def addItems(self):
+        names = [layer.name() for layer in QgsProject.instance().mapLayers().values()]
+
+        self.listView = self.widget2.listView
+        model = QtGui.QStandardItemModel()
+
+        self.listView.setModel(model)
+
+        for i in names:
+            model.appendRow(QtGui.QStandardItem(i))
+
+    def settings(self):
+        self.style_settings = StyleSettings
+        self.style_settings.title = self.widget3.line_edit.text()
+        self.style_settings.author = self.widget3.line_edit_2.text()
+
+    def run(self):
+        self.hide()
+
+
+        
+        
 

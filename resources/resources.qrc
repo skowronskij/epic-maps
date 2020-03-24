@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/templates" >
+        <file>landscape.qpt</file>
+        <file>portrait.qpt</file>
+    </qresource>     
+</RCC>
