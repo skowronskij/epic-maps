@@ -63,7 +63,7 @@ class EpicMapsDialog(QtWidgets.QDialog, FORM_CLASS):
         self.widget3.Previous3.clicked.connect(self.changewidgetto2)
         self.widget3.OK.clicked.connect(self.run)
 
-        self.selectStyle()
+        self.select_styles()
         self.pageOrientation()
         self.addItems()
         
@@ -84,9 +84,16 @@ class EpicMapsDialog(QtWidgets.QDialog, FORM_CLASS):
         self.widget2.hide()
         self.widget3.hide()
 
-    def selectStyle(self):
+    def select_styles(self):
         self.styles_container = StylesContainer
         self.widget1.comboBox.addItems(list(self.styles_container.STYLE_DICT.keys()))
+        self.selectedFileIndex = self.widget1.comboBox.currentIndex()
+        self.selected_class = list(self.styles_container.STYLE_DICT.values())[self.selectedFileIndex]
+        self.widget1.comboBox.currentIndexChanged.connect(self.styles_index)
+
+    def styles_index(self):
+        self.selectedFileIndex = self.widget1.comboBox.currentIndex()
+        self.selected_class = list(self.styles_container.STYLE_DICT.values())[self.selectedFileIndex]
 
     def pageOrientation(self):
         self.SIZE_DICT = {"landscape": QgsLayoutItemPage.Orientation.Landscape, "portrait": QgsLayoutItemPage.Orientation.Portrait}
