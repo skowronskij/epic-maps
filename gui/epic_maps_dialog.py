@@ -24,7 +24,7 @@
 
 import os
 
-from qgis.core import QgsLayoutItemPage, QgsProject
+from qgis.core import QgsLayoutItemPage, QgsProject, QgsPageSizeRegistry
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets, QtGui
 
@@ -66,6 +66,7 @@ class EpicMapsDialog(QtWidgets.QDialog, FORM_CLASS):
         self.select_styles()
         self.pageOrientation()
         self.addItems()
+        self.pageSizes()
         
     def changewidgetto1(self):
         self.hideallwidgets()
@@ -98,6 +99,24 @@ class EpicMapsDialog(QtWidgets.QDialog, FORM_CLASS):
     def pageOrientation(self):
         self.SIZE_DICT = {"landscape": QgsLayoutItemPage.Orientation.Landscape, "portrait": QgsLayoutItemPage.Orientation.Portrait}
         self.widget2.comboBox_2.addItems(list(self.SIZE_DICT.keys()))
+        self.selectedOrientationIndex = self.widget2.comboBox_2.currentIndex()
+        self.selected_orientation = list(self.SIZE_DICT.values())[self.selectedOrientationIndex]
+        self.widget2.comboBox_2.currentIndexChanged.connect(self.orientation_index)
+
+    def orientation_index(self):
+        self.selectedOrientationIndex = self.widget2.comboBox_2.currentIndex()
+        self.selected_orientation = list(self.SIZE_DICT.values())[self.selectedOrientationIndex]
+
+    def pageSizes(self):
+        self.pages_list = [i.name for i in QgsPageSizeRegistry().entries()]
+        self.widget2.comboBox.addItems(self.pages_list)
+        self.selectedSizeIndex = self.widget2.comboBox.currentIndex()
+        self.selectedSize = self.pages_list[self.selectedSizeIndex]
+        self.widget2.comboBox.currentIndexChanged.connect(self.size_index)
+
+    def size_index(self):
+        self.selectedSizeIndex = self.widget2.comboBox.currentIndex()
+        self.selectedSize = self.pages_list[self.selectedSizeIndex]
 
     def addItems(self):
         names = [layer.name() for layer in QgsProject.instance().mapLayers().values()]
