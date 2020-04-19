@@ -26,3 +26,17 @@ class BaseStyle:
     def generate_layout(self):
         pass
 
+    def recolor(self, vectorLayer, minRed, maxRed, minGreen, maxGreen, minBlue, maxBlue, outlineWidth):
+        red = random.randrange(minRed, maxRed)
+        green = random.randrange(minGreen, maxGreen)
+        blue = random.randrange(minBlue, maxBlue)
+        colors = str(red) + "," + str(green) + "," + str(blue)
+        border_colors = str(red-20) + "," + str(green-20) + "," + str(blue-20)
+
+        symbol = QgsFillSymbol.createSimple({'color': colors, \
+            'outline_color': border_colors, \
+            'outline_width': outlineWidth, \
+            'joinstyle':'round'})
+
+        vectorLayer.renderer().setSymbol(symbol)
+        vectorLayer.triggerRepaint()

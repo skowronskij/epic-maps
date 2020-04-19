@@ -10,22 +10,12 @@ class FantasyStyle(BaseStyle):
         super().generate_layout(self)
         #tutaj jakaś logika która wywołuje odpowiednie funkcje dla odpowiednich warstw
 
-    def stylePolygonLands(self, vectorLayer):
+
+    #Style - do przetestowania!
+    def stylePolygonLands(self, vectorLayer):        
+        self.recolor(vectorLayer, 250, 255, 230, 250, 160, 200, 0.2)
+
         registry = QgsProject.instance()
-        
-        red = random.randrange(250,255)
-        green = random.randrange(230,250)
-        blue = random.randrange(160,200)
-        colors = str(red) + "," + str(green) + "," + str(blue)
-        border_colors = str(red-20) + "," + str(green-20) + "," + str(blue-20)
-
-        symbol = QgsFillSymbol.createSimple({'color': colors, \
-            'outline_color': border_colors, \
-            'outline_width':'0.2', \
-            'joinstyle':'round'})
-
-        vectorLayer.renderer().setSymbol(symbol)
-        vectorLayer.triggerRepaint()
 
         vectorLayer.selectAll()
         bb = vectorLayer.boundingBoxOfSelected()
@@ -47,4 +37,6 @@ class FantasyStyle(BaseStyle):
                 'use_custom_dash': '1', 'customdash': dash})
             lines.renderer().setSymbol(lines_symbol)
             registry.addMapLayer(lines)
-            
+    
+    def stylePolygonWater(self, vectorLayer):
+        self.recolor(vectorLayer, 100, 180, 200, 230, 245, 250, 0.15)
