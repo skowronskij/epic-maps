@@ -13,7 +13,7 @@ class FantasyStyle(BaseStyle):
 
     #Style - do przetestowania!
     def stylePolygonLands(self, vectorLayer):        
-        self.recolor(vectorLayer, 250, 255, 230, 250, 160, 200, 0.2)
+        self.recolorPolygon(vectorLayer, 250, 255, 230, 250, 160, 200, 0.2)
 
         registry = QgsProject.instance()
 
@@ -39,4 +39,7 @@ class FantasyStyle(BaseStyle):
             registry.addMapLayer(lines)
     
     def stylePolygonWater(self, vectorLayer):
-        self.recolor(vectorLayer, 100, 180, 200, 230, 245, 250, 0.15)
+        self.recolorPolygon(vectorLayer, 100, 180, 200, 230, 245, 250, 0.15)
+
+    def stylePolygonOther(self, vectorLayer)
+        self.recolorPolygon(vectorLayer, 240, 255, 190, 220, 100, 140, 0.15)

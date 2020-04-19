@@ -26,7 +26,7 @@ class BaseStyle:
     def generate_layout(self):
         pass
 
-    def recolor(self, vectorLayer, minRed, maxRed, minGreen, maxGreen, minBlue, maxBlue, outlineWidth):
+    def recolorPolygon(self, vectorLayer, minRed, maxRed, minGreen, maxGreen, minBlue, maxBlue, outlineWidth):
         red = random.randrange(minRed, maxRed)
         green = random.randrange(minGreen, maxGreen)
         blue = random.randrange(minBlue, maxBlue)
