@@ -41,5 +41,5 @@ class FantasyStyle(BaseStyle):
     def stylePolygonWater(self, vectorLayer):
         self.recolorPolygon(vectorLayer, 100, 180, 200, 230, 245, 250, 0.15)
 
-    def stylePolygonOther(self, vectorLayer)
+    def stylePolygonOther(self, vectorLayer):
         self.recolorPolygon(vectorLayer, 240, 255, 190, 220, 100, 140, 0.15)
