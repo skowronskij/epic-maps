@@ -82,6 +82,7 @@ class EpicMapsDialog(QDialog, FORM_CLASS):
         self.currentWidget.show()
 
     def prevTab(self):
+        self.lbMessage.setText('')
         self.currentWidget.hide()
         if self.currentWidget == self.layersPageOptionsWidget:
             self.currentWidget = self.styleOpstionsWidget

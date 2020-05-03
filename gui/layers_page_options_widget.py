@@ -3,8 +3,11 @@
 import os
 
 from qgis.PyQt import uic
+from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtWidgets import QWidget
-from qgis.core import QgsPageSizeRegistry
+from qgis.core import QgsPageSizeRegistry, QgsProject
+
+from ..models.layerListModel import LayersListModel, LayerDelegate
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'layers_page_options_widget.ui'))
@@ -15,12 +18,16 @@ class LayersPageOptionsWidget(QWidget, FORM_CLASS):
         super(LayersPageOptionsWidget, self).__init__(parents)
         self.setupUi(self)
 
-        self.cbOrientation.addItems(['landscape', 'portrait'])
-        self.cbSize.addItems([i.name for i in QgsPageSizeRegistry().entries()])
-
         self.parent = parent
         self.styleSettings = self.parent.styleSettings
+        self.setGui()
         self.connectSignals()
+
+    def setGui(self):
+        self.cbOrientation.addItems(['landscape', 'portrait'])
+        self.cbSize.addItems([i.name for i in QgsPageSizeRegistry().entries()])
+        self.lvLayers.setModel(LayersListModel())
+        self.lvLayers.setItemDelegate(LayerDelegate(self))
 
     def connectSignals(self):
         self.tbNext.clicked.connect(self.nextWidget)
@@ -33,18 +40,31 @@ class LayersPageOptionsWidget(QWidget, FORM_CLASS):
             return
         self.parent.on_next_tab.emit(self)
 
+    def show(self):
+        self.setLayerList()
+        super(LayersPageOptionsWidget, self).show()
+
     def prevWidget(self):
         self.parent.on_previous_tab.emit()
 
     def setSettings(self):
-        # TODO Layers table model with checkboxes
-        self.styleSettings.layers = ['asd']
+        layers = self.lvLayers.model().selected_layers
+        if not layers:
+            return False, 'No layers selected'
         size = self.cbSize.currentText()
-        orientation = self.cbOrientation.currentText()
         if not size:
             return False, 'Size argument missing'
+        orientation = self.cbOrientation.currentText()
         if not orientation:
             return False, 'Orientation argument missing'
         self.styleSettings.size = size
         self.styleSettings.orientation= orientation
         return True, None
+
+    def setLayerList(self):
+        self.lvLayers.model().removeRows()
+        model = self.lvLayers.model()
+        layers = list(QgsProject.instance().mapLayers().values())
+        model.insertRows(0, layers)
+        for row in range(0, model.rowCount()):
+            self.lvLayers.openPersistentEditor(model.index(row))
