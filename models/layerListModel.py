@@ -26,7 +26,8 @@ class LayersListModel(QAbstractListModel):
                 if layer not in self.selected_layers:
                     self.selected_layers.append(layer)
             else:
-                self.selected_layers.remove(layer)
+                if layer in self.selected_layers:
+                    self.selected_layers.remove(layer)
             return True
 
     def insertRows(self, position, rows, parent=QModelIndex()):
