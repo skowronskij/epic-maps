@@ -5,7 +5,7 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtWidgets import QWidget
-from qgis.core import QgsPageSizeRegistry, QgsProject, QgsMapLayerType
+from qgis.core import QgsPageSizeRegistry, QgsProject, QgsMapLayerType, QgsWkbTypes
 
 from ..models.layerListModel import LayersListModel, LayerDelegate
 
@@ -57,6 +57,7 @@ class LayersPageOptionsWidget(QWidget, FORM_CLASS):
         orientation = self.cbOrientation.currentText()
         if not orientation:
             return False, 'Orientation argument missing'
+        self.styleSettings.layers = self.sortLayers(layers)
         self.styleSettings.size = size
         self.styleSettings.orientation= orientation
         return True, None
@@ -71,3 +72,22 @@ class LayersPageOptionsWidget(QWidget, FORM_CLASS):
         model.insertRows(0, layers)
         for row in range(0, model.rowCount()):
             self.lvLayers.openPersistentEditor(model.index(row))
+
+    def sortLayers(self, layers):
+        points = {}
+        lines = {}
+        polys = {}
+        for layer in layers:
+            if layer.geometryType() == QgsWkbTypes.PointGeometry:
+                points.update({layer: layer.featureCount()})
+            elif layer.geometryType() == QgsWkbTypes.LineGeometry:
+                length = sum([f.geometry().length() for f in layer.getFeatures()])
+                lines.update({layer: length})
+            elif layer.geometryType() == QgsWkbTypes.PolygonGeometry:
+                area = sum([f.geometry().area() for f in layer.getFeatures()])
+                polys.update({layer: area})
+        return {
+            'points': {layer: count for layer, count in sorted(points.items(), key=lambda item: item[1])},
+            'lines': {layer: length for layer, length in sorted(lines.items(), key=lambda item: item[1])},
+            'polys': {layer: area for layer, area in sorted(polys.items(), key=lambda item: item[1])}
+        }

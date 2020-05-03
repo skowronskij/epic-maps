@@ -27,6 +27,7 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import pyqtSignal
 from qgis.PyQt.QtWidgets import QDialog, QWidget
+from qgis.core import QgsProject
 
 from .style_options_widget import StyleOpstionsWidget
 from .layers_page_options_widget import LayersPageOptionsWidget
@@ -93,6 +94,21 @@ class EpicMapsDialog(QDialog, FORM_CLASS):
     def generateLayout(self):
         self.close()
         style_class = StylesContainer(self.styleSettings).get_style
+        # print(self.styleSettings.layers)
+        self.addLayersToTOC()
 
     def setMessage(self, message: str):
         self.lbMessage.setText(message)
+
+    def addLayersToTOC(self):
+        layers = self.styleSettings.layers
+        root = QgsProject.instance().layerTreeRoot()
+        group = root.addGroup(f'Epic Maps {self.styleSettings.mapstyle} - {self.styleSettings.title}')
+        for geom_type, layers in layers.items():
+            for layer in layers.keys():
+                copy = layer.clone()
+                copy.dataProvider().addFeatures(layer.getFeatures())
+                copy.updateExtents(True)
+                QgsProject.instance().addMapLayer(copy, False)
+                group.addLayer(copy)
+                copy.triggerRepaint()
