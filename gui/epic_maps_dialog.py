@@ -91,7 +91,7 @@ class EpicMapsDialog(QDialog, FORM_CLASS):
 
     def generateLayout(self):
         self.close()
-        self.styleClass = StylesContainer(self.styleSettings)
+        style_class = StylesContainer(self.styleSettings).get_style
 
     def setMessage(self, message: str):
         self.lbMessage.setText(message)
