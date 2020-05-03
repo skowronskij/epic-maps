@@ -21,15 +21,14 @@
  *                                                                         *
  ***************************************************************************/
 """
+import os.path
+
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction
+from qgis.PyQt.QtWidgets import QAction, QMessageBox
 
-# Initialize Qt resources from file resources.py
 from .build.resources import *
-# Import the code for the dialog
 from .gui.epic_maps_dialog import EpicMapsDialog
-import os.path
 
 
 class EpicMaps:
@@ -43,11 +42,8 @@ class EpicMaps:
             application at run time.
         :type iface: QgsInterface
         """
-        # Save reference to the QGIS interface
         self.iface = iface
-        # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
-        # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
         locale_path = os.path.join(
             self.plugin_dir,
@@ -59,27 +55,12 @@ class EpicMaps:
             self.translator.load(locale_path)
             QCoreApplication.installTranslator(self.translator)
 
-        # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&Epic Maps')
 
-        # Check if plugin was started the first time in current QGIS session
-        # Must be set in initGui() to survive plugin reloads
-        self.first_start = None
+        self.epicMapsDialog = None
 
-    # noinspection PyMethodMayBeStatic
     def tr(self, message):
-        """Get the translation for a string using Qt translation API.
-
-        We implement this ourselves since we do not inherit QObject.
-
-        :param message: String for translation.
-        :type message: str, QString
-
-        :returns: Translated version of message.
-        :rtype: QString
-        """
-        # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('EpicMaps', message)
 
     def add_action(
@@ -144,7 +125,6 @@ class EpicMaps:
             action.setWhatsThis(whats_this)
 
         if add_to_toolbar:
-            # Adds plugin icon to Plugins toolbar
             self.iface.addToolBarIcon(action)
 
         if add_to_menu:
@@ -158,16 +138,12 @@ class EpicMaps:
 
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
-
         icon_path = ':/plugins/epic_maps/icon.png'
         self.add_action(
             icon_path,
             text=self.tr(u'Epic maps'),
-            callback=self.run,
+            callback= self.run,
             parent=self.iface.mainWindow())
-
-        # will be set False in run()
-        self.first_start = True
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -178,20 +154,18 @@ class EpicMaps:
             self.iface.removeToolBarIcon(action)
 
     def run(self):
-        """Run method that performs all the real work"""
-
-        # Create the dialog with elements (after translation) and keep reference
-        # Only create GUI ONCE in callback, so that it will only load when the plugin is started
-        if self.first_start == True:
-            self.first_start = False
-            self.dlg = EpicMapsDialog()
-
-        # show the dialog
-        self.dlg.show()
-        # Run the dialog event loop
-        result = self.dlg.exec_()
-        # See if OK was pressed
-        if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            pass
+        """ 
+        Detecting if main plugin dialog was ever opened before, if it was
+        ask user to open clear one or return to prev settings
+        """
+        if not self.epicMapsDialog:
+            self.epicMapsDialog = EpicMapsDialog()
+        else:
+            result = QMessageBox.question(
+                self.iface.mainWindow(), 
+                'Epic Maps', 
+                'Previous settings found. Restore it?',
+                QMessageBox.Yes | QMessageBox.No)
+            if result == QMessageBox.No:
+                self.epicMapsDialog = EpicMapsDialog()
+        self.epicMapsDialog.exec()
