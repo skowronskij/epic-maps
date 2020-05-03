@@ -5,7 +5,7 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtWidgets import QWidget
-from qgis.core import QgsPageSizeRegistry, QgsProject
+from qgis.core import QgsPageSizeRegistry, QgsProject, QgsMapLayerType
 
 from ..models.layerListModel import LayersListModel, LayerDelegate
 
@@ -64,7 +64,10 @@ class LayersPageOptionsWidget(QWidget, FORM_CLASS):
     def setLayerList(self):
         self.lvLayers.model().removeRows()
         model = self.lvLayers.model()
-        layers = list(QgsProject.instance().mapLayers().values())
+        layers = [
+            layer for layer in QgsProject.instance().mapLayers().values() 
+            if layer.type() == QgsMapLayerType.VectorLayer
+            ]
         model.insertRows(0, layers)
         for row in range(0, model.rowCount()):
             self.lvLayers.openPersistentEditor(model.index(row))
