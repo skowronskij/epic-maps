@@ -43,3 +43,18 @@ class FantasyStyle(BaseStyle):
 
     def stylePolygonOther(self, vectorLayer):
         self.recolorPolygon(vectorLayer, 240, 255, 190, 220, 100, 140, 0.15)
+
+    def stylePointTowns(self,vectorLayer):
+        self.symbol = QgsSvgMarkerSymbolLayer(":/fantasy/resources/medieval.svg")
+        self.symbol.setSize(6)
+        vectorLayer.renderer().symbol().changeSymbolLayer(0, self.symbol )
+
+    def stylePointBattles(self,vectorLayer):
+        self.symbol = QgsSvgMarkerSymbolLayer(":/fantasy/resources/monuments.svg")
+        self.symbol.setSize(6)
+        vectorLayer.renderer().symbol().changeSymbolLayer(0, self.symbol )
+
+    def stylePointOther(self,vectorLayer):
+        self.symbol = vectorLayer.renderer().symbol()
+        self.symbol.setColor(QColor.fromRgb(153, 0, 0))
+        vectorLayer.triggerRepaint()

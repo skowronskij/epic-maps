@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/fantasy/resources" >
+        <file>medieval.svg</file>
+        <file>monuments.svg</file>
+		<file>old-paper.jpg</file>
+    </qresource>     
+</RCC>
