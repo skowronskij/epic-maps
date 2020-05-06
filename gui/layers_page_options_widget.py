@@ -5,7 +5,7 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtWidgets import QWidget
-from qgis.core import QgsPageSizeRegistry, QgsProject, QgsMapLayerType, QgsWkbTypes
+from qgis.core import QgsPageSizeRegistry, QgsProject,QgsWkbTypes, QgsMapLayer
 
 from ..models.layerListModel import LayersListModel, LayerDelegate
 
@@ -59,7 +59,7 @@ class LayersPageOptionsWidget(QWidget, FORM_CLASS):
             return False, 'Orientation argument missing'
         self.styleSettings.layers = self.sortLayers(layers)
         self.styleSettings.size = size
-        self.styleSettings.orientation= orientation
+        self.styleSettings.orientation = orientation
         return True, None
 
     def setLayerList(self):
@@ -67,7 +67,7 @@ class LayersPageOptionsWidget(QWidget, FORM_CLASS):
         model = self.lvLayers.model()
         layers = [
             layer for layer in QgsProject.instance().mapLayers().values() 
-            if layer.type() == QgsMapLayerType.VectorLayer
+            if layer.type() == QgsMapLayer.VectorLayer
             ]
         model.insertRows(0, layers)
         for row in range(0, model.rowCount()):
