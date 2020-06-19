@@ -27,6 +27,7 @@ class TitleAuthorOptionsWidget(QWidget, FORM_CLASS):
 
     def settingsCompleted(self):
         self.setSettings()
+        print('aaa')
         self.parent.on_generate.emit()
 
     def setSettings(self):

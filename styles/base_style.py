@@ -1,6 +1,10 @@
+import random
+from qgis.core import *
+from qgis.gui import *
+
 class BaseStyle:
     def __init__(self, stylesettings):
-        self.__stylesettings = stylesettings
+        self.stylesettings = stylesettings
     
     def _create_landscape_layout(self):
         self.landscape_path = ":/templates/landscape.qpt"
@@ -10,8 +14,8 @@ class BaseStyle:
                 content = f.read()
 
         substitution_map = {
-            'Tytuł': self.__stylesettings.title.strip(),
-            'Autor': self.__stylesettings.author.strip()
+            'Tytuł': self.stylesettings.title.strip(),
+            'Autor': self.stylesettings.author.strip()
         }
         for before, after in substitution_map.items():
             content = content.replace(before, after)
@@ -21,18 +25,20 @@ class BaseStyle:
         document.setContent(content)
         layout = QgsPrintLayout(QgsProject.instance())
         layout.loadFromTemplate(document, QgsReadWriteContext())
-        layoutName = self.__stylesettings.title.split('\n')[0]
+        layoutName = self.stylesettings.title.split('\n')[0]
 
     def generate_layout(self):
         pass
 
-    def restylePolygon(self, vectorLayer, minRed, maxRed, minGreen, maxGreen, minBlue, maxBlue, outlineWidth, make_boundary_waves=False):
+    def generateColors(self, minRed, maxRed, minGreen, maxGreen, minBlue, maxBlue):
         red = random.randrange(minRed, maxRed)
         green = random.randrange(minGreen, maxGreen)
         blue = random.randrange(minBlue, maxBlue)
         colors = str(red) + "," + str(green) + "," + str(blue)
-        border_colors = str(red-20) + "," + str(green-20) + "," + str(blue-20)
+        return colors
 
+    def restylePolygon(self, vectorLayer, colors, outlineWidth, make_boundary_waves=False):
+        border_colors = str(red-20) + "," + str(green-20) + "," + str(blue-20)
         symbol = QgsFillSymbol.createSimple({'color': colors, \
             'outline_color': border_colors, \
             'outline_width': outlineWidth, \
@@ -90,8 +96,14 @@ class BaseStyle:
                 if number_of_points <= 0:
                     break
         pLayer.updateExtents()
-        registry.addMapLayer(pLayer)
+        QgsProject().instance().addMapLayer(pLayer)
 
         symbol = QgsSvgMarkerSymbolLayer(marker_filename)
         symbol.setSize(4) #póki co przypadkowa wartość, trzeba to jeszcze przemyśleć
         pLayer.renderer().symbol().changeSymbolLayer(0, symbol )
+
+
+    def restyleLine(self, vectorLayer, colors, width, style='solid'):
+        lines_symbol = QgsLineSymbol.createSimple({'line_color': colors, \
+            'outline_width':width, 'joinstyle':'round', 'line_style': style})
+        vectorLayer.renderer().setSymbol(lines_symbol)
