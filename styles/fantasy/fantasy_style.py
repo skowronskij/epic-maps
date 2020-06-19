@@ -44,3 +44,7 @@ class FantasyStyle(BaseStyle):
         self.symbol = vectorLayer.renderer().symbol()
         self.symbol.setColor(QColor.fromRgb(153, 0, 0))
         vectorLayer.triggerRepaint()
+
+
+    def styleLineRivers(self, vectorLayer):
+        self.restyleLine(vectorLayer, 100, 180, 200, 230, 245, 250)

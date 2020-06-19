@@ -95,3 +95,13 @@ class BaseStyle:
         symbol = QgsSvgMarkerSymbolLayer(marker_filename)
         symbol.setSize(4) #póki co przypadkowa wartość, trzeba to jeszcze przemyśleć
         pLayer.renderer().symbol().changeSymbolLayer(0, symbol )
+
+
+    def restyleLine(self, vectorLayer, minRed, maxRed, minGreen, maxGreen, minBlue, maxBlue):
+        red = random.randrange(minRed, maxRed)
+        green = random.randrange(minGreen, maxGreen)
+        blue = random.randrange(minBlue, maxBlue)
+        colors = str(red) + "," + str(green) + "," + str(blue)
+        lines_symbol = QgsLineSymbol.createSimple({'outline_color': colors, \
+            'outline_width':'0.2', 'joinstyle':'round'})
+        vectorLayer.renderer().setSymbol(lines_symbol)
