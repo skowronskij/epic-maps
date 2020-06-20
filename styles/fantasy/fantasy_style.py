@@ -3,6 +3,7 @@ from qgis.core import *
 from qgis.gui import *
 
 import processing
+import os
 
 class FantasyStyle(BaseStyle):
     def __init__(self, stylesettings):
@@ -28,21 +29,23 @@ class FantasyStyle(BaseStyle):
 
     def stylePolygonForest(self, vectorLayer):
         epsg = vectorLayer.crs().authid()
-        self.polygon2markers(vectorLayer, epsg, ":/fantasy/resources/tree.svg")
+        self.polygon2markers(vectorLayer, epsg, os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","tree.svg"))
 
     def stylePolygonMountains(self, vectorLayer):
         epsg = vectorLayer.crs().authid()
-        self.polygon2markers(vectorLayer, epsg, ":/fantasy/resources/mountain.svg")
+        self.polygon2markers(vectorLayer, epsg, os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","mountains.svg"))
 
     def stylePointTowns(self,vectorLayer):
-        self.symbol = QgsSvgMarkerSymbolLayer(":/fantasy/resources/medieval.svg")
+        self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","monuments.svg"))
         self.symbol.setSize(6)
         vectorLayer.renderer().symbol().changeSymbolLayer(0, self.symbol )
+        vectorLayer.triggerRepaint()
 
     def stylePointBattles(self,vectorLayer):
-        self.symbol = QgsSvgMarkerSymbolLayer("resources/tree.svg")
+        self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","medieval.svg"))
         self.symbol.setSize(6)
         vectorLayer.renderer().symbol().changeSymbolLayer(0, self.symbol )
+        vectorLayer.triggerRepaint()
 
     def stylePointOther(self,vectorLayer):
         self.symbol = vectorLayer.renderer().symbol()
@@ -64,8 +67,9 @@ class FantasyStyle(BaseStyle):
         vectorLayer.triggerRepaint()
 
     def testing(self):
-        layers = list(self.stylesettings.layers['polys'].keys())
+        layers = list(self.stylesettings.layers['points'].keys())
         print(self.stylesettings.layers)
         print(layers)
-        polys = layers[0]
-        self.stylePolygonForest(polys)
+        points = layers[0]
+        print(points)
+        self.stylePointBattles(points)

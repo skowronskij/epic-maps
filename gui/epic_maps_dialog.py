@@ -96,9 +96,10 @@ class EpicMapsDialog(QDialog, FORM_CLASS):
         style_class = StylesContainer(self.styleSettings).get_style
         print(style_class)
         # print(self.styleSettings.layers)
+        style_class.testing()
         self.addLayersToTOC()
         print(style_class)
-        style_class.testing()
+        
 
     def setMessage(self, message: str):
         self.lbMessage.setText(message)
@@ -110,8 +111,11 @@ class EpicMapsDialog(QDialog, FORM_CLASS):
         for geom_type, layers in layers.items():
             for layer in layers.keys():
                 copy = layer.clone()
+                layer.saveNamedStyle(os.path.join(os.path.dirname(os.path.abspath(__file__)),"style.qml"))
                 copy.dataProvider().addFeatures(layer.getFeatures())
                 copy.updateExtents(True)
+                copy.loadNamedStyle(os.path.join(os.path.dirname(os.path.abspath(__file__)),"style.qml"))
                 QgsProject.instance().addMapLayer(copy, False)
                 group.addLayer(copy)
                 copy.triggerRepaint()
+                

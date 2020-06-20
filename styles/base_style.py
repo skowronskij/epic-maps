@@ -102,7 +102,6 @@ class BaseStyle:
         symbol.setSize(4) #póki co przypadkowa wartość, trzeba to jeszcze przemyśleć
         pLayer.renderer().symbol().changeSymbolLayer(0, symbol )
 
-
     def restyleLine(self, vectorLayer, colors, width, style='solid'):
         lines_symbol = QgsLineSymbol.createSimple({'line_color': colors, \
             'outline_width':width, 'joinstyle':'round', 'line_style': style})
