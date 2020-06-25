@@ -5,6 +5,8 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import QWidget
 
+from ..models.layerTypeModel import LayerTypeModel
+
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'title_author_options_widget.ui'))
 
@@ -16,6 +18,7 @@ class TitleAuthorOptionsWidget(QWidget, FORM_CLASS):
 
         self.parent = parent
         self.styleSettings = self.parent.styleSettings
+        self.tvLayersType.setModel(LayerTypeModel())
         self.connectSignals()
 
     def connectSignals(self):
@@ -27,7 +30,6 @@ class TitleAuthorOptionsWidget(QWidget, FORM_CLASS):
 
     def settingsCompleted(self):
         self.setSettings()
-        print('aaa')
         self.parent.on_generate.emit()
 
     def setSettings(self):
