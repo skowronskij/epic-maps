@@ -21,6 +21,18 @@ class TitleAuthorOptionsWidget(QWidget, FORM_CLASS):
         self.tvLayersType.setModel(LayerTypeModel())
         self.connectSignals()
 
+    def show(self):
+        self.setLayerList()
+        super(TitleAuthorOptionsWidget, self).show()
+
+    def setLayerList(self):
+        self.tvLayersType.model().removeRows()
+        model = self.tvLayersType.model()
+        layers = self.styleSettings.layers
+        model.insertRows(0, layers)
+        #for row in range(0, model.rowCount()):
+        #    self.tvLayersType.openPersistentEditor(model.index(row))
+
     def connectSignals(self):
         self.tbPrevious.clicked.connect(self.prevWidget)
         self.tbGenerate.clicked.connect(self.settingsCompleted)
@@ -35,4 +47,4 @@ class TitleAuthorOptionsWidget(QWidget, FORM_CLASS):
     def setSettings(self):
         self.styleSettings.title = self.leTitle.text()
         self.styleSettings.author = self.leAuthor.text()
-        
+

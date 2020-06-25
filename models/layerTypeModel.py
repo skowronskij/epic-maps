@@ -7,13 +7,32 @@ class LayerTypeModel(QAbstractTableModel):
     def __init__(self, parent=None, *args):
         QAbstractTableModel.__init__(self, parent, *args)
         # to co bedziemy potrzebować do zwrócenia albo przetrzymywania informacji
-        self.data = [1,2,3]
+        self.layers = []
 
     def columnCount(self, parent=QModelIndex()):
         return 2
 
     def rowCount(self, parent=QModelIndex()):
-        return len(self.data)
+        return len(self.layers)
+
+    def insertRows(self, position, rows, parent=QModelIndex()):
+        layers = []
+        for key, item in rows.items():
+            layers.extend(list(item.keys()))
+        self.beginInsertRows(parent, position, position + len(rows) - 1)
+        for i, layer in enumerate(layers):
+            self.layers.insert(position+i, layer)
+        self.endInsertRows()
+        return True
+
+    def removeRows(self, row=None, count=None, parent=QModelIndex()):
+        if count==None:
+            count = len(self.layers)
+        if row==None:
+            row = 0
+        self.beginRemoveRows(parent, row, row+count)
+        self.layers = []
+        self.endRemoveRows()
 
     def headerData(self, section, QtOrientation, role):
         if QtOrientation == Qt.Horizontal and role == Qt.DisplayRole:
@@ -25,7 +44,12 @@ class LayerTypeModel(QAbstractTableModel):
     def data(self, index, role):
         if not index.isValid():
             return
-        layer = self.data[index.row()]
+        layer = self.layers[index.row()]
         if role == Qt.DisplayRole:
             if index.column() == 0:
-                return layer
+                return layer.name()
+
+    def flags(self, model):
+        if not model.isValid():
+            return
+        return Qt.ItemIsEnabled | Qt.ItemIsEditable
