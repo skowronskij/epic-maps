@@ -5,7 +5,7 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import QWidget
 
-from ..styles.styles_container import STYLE_DICT
+from ..styles.styles_container import STYLE_DICT, StylesContainer
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'style_options_widget.ui'))
@@ -18,6 +18,7 @@ class StyleOpstionsWidget(QWidget, FORM_CLASS):
         self.setupUi(self)
     
         self.cbStyles.addItems(list(STYLE_DICT.keys()))
+        self.cbStyles.textChanged.connect()
 
         self.parent = parent
         self.styleSettings = self.parent.styleSettings
@@ -33,3 +34,7 @@ class StyleOpstionsWidget(QWidget, FORM_CLASS):
             return
         self.styleSettings.mapstyle = self.cbStyles.currentText()
         self.parent.on_next_tab.emit(self)
+
+    def setStyle(self):
+       self.parent.currentstyle = StylesContainer(self.styleSettings).get_style
+       

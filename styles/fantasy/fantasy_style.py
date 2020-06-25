@@ -11,6 +11,7 @@ class FantasyStyle(BaseStyle):
         self.water_colors = self.generateColors(100, 180, 200, 230, 245, 250)
         self.land_colors = self.generateColors(250, 255, 230, 250, 160, 200)
         self.routes_colors = self.generateColors(102, 114, 50, 60, 30, 40)
+        self.stylesettings.types = {"points":["Battles","Towns","Other"],"lines":["Rivers","Routes","Other"],"polygons":["Lands","Waters","Forests","Mountains","Other"]}
 
     def generate_layout(self):
         super().generate_layout(self)

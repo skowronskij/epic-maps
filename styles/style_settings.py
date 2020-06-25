@@ -5,4 +5,5 @@ class StyleSettings:
     layers = None
     orientation = None
     size = None
+    types = None
     

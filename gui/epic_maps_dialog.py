@@ -51,8 +51,10 @@ class EpicMapsDialog(QDialog, FORM_CLASS):
 
         self.styleSettings = StyleSettings()
         self.currentWidget = None
+        self.currentStyle = None
         self.connectSignals()
         self.initWidgets()
+        
 
     def initWidgets(self):
         # First widget on dialog start - choose style

@@ -1,7 +1,7 @@
 #encoding: utf-8
 
 from qgis.PyQt.Qt import QItemDelegate, QModelIndex, QAbstractTableModel, Qt
-from qgis.PyQt.QtWidgets import QCheckBox
+from qgis.PyQt.QtWidgets import QComboBox
 
 class LayerTypeModel(QAbstractTableModel):
     def __init__(self, parent=None, *args):
@@ -53,3 +53,25 @@ class LayerTypeModel(QAbstractTableModel):
         if not model.isValid():
             return
         return Qt.ItemIsEnabled | Qt.ItemIsEditable
+
+class LayerDelegate(QItemDelegate):
+    def __init__(self, parent=None):
+        QItemDelegate.__init__(self, parent)
+
+    
+    def createEditor(self, parent, option, index):
+        layer_name = index.data(Qt.UserRole).name()
+        editor = QComboBox(layer_name, parent)
+        editor.clicked.connect(self.valueChanged)
+        return editor
+
+    def setEditorData(self, editor, index):
+        editor.blockSignals(True)
+        editor.setChecked(False)
+        editor.blockSignals(False)
+    
+    def setModelData(self, editor, model, index):
+        model.setData(index, editor.isChecked(), Qt.EditRole)
+
+    def valueChanged(self):
+        self.commitData.emit(self.sender())
