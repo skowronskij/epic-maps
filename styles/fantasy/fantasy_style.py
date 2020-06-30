@@ -21,20 +21,20 @@ class FantasyStyle(BaseStyle):
     def stylePolygonLands(self, vectorLayer):   
         self.restylePolygon(vectorLayer, self.land_colors, 0.2, True)
     
-    def stylePolygonWater(self, vectorLayer):
+    def stylePolygonWaters(self, vectorLayer):
         self.restylePolygon(vectorLayer, self.water_colors,  0.15)
 
     def stylePolygonOther(self, vectorLayer):
         colors = self.generateColors(240, 255, 190, 220, 100, 140)
         self.restylePolygon(vectorLayer, colors, 0.15)
 
-    def stylePolygonForest(self, vectorLayer):
+    def stylePolygonForests(self, vectorLayer):
         epsg = vectorLayer.crs().authid()
         self.polygon2markers(vectorLayer, epsg, os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","tree.svg"))
 
     def stylePolygonMountains(self, vectorLayer):
         epsg = vectorLayer.crs().authid()
-        self.polygon2markers(vectorLayer, epsg, os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","mountains.svg"))
+        self.polygon2markers(vectorLayer, epsg, os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","mountain.svg"))
 
     def stylePointTowns(self,vectorLayer):
         self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","monuments.svg"))
@@ -67,10 +67,20 @@ class FantasyStyle(BaseStyle):
         self.restyleLine(vectorLayer, colors, '0.5')
         vectorLayer.triggerRepaint()
 
-    def testing(self):
-        layers = list(self.stylesettings.layers['points'].keys())
-        print(self.stylesettings.layers)
-        print(layers)
-        points = layers[0]
-        print(points)
-        self.stylePointBattles(points)
+    def testing(self, layer_style_map):
+        for layer, style in layer_style_map.items():
+            layer_type = self.getLayerType(layer)
+            method_name = f'style{layer_type}{style}'
+            method = getattr(self, method_name)
+            print(method)
+            method(layer)
+
+    def getLayerType(self, layer):
+        if layer.geometryType() == QgsWkbTypes.PointGeometry:
+            return 'Point'
+        if layer.geometryType() == QgsWkbTypes.LineGeometry:
+            return 'Line'
+        if layer.geometryType() == QgsWkbTypes.PolygonGeometry:
+            return 'Polygon'
+        # jeśli typ gemoetrii inny niż przewidywany zwracamy none
+        return None

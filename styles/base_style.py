@@ -1,6 +1,7 @@
 import random
 from qgis.core import *
 from qgis.gui import *
+from qgis import processing
 
 class BaseStyle:
     def __init__(self, stylesettings):
@@ -38,10 +39,14 @@ class BaseStyle:
         return colors
 
     def restylePolygon(self, vectorLayer, colors, outlineWidth, make_boundary_waves=False):
+        colors_split = colors.split(',')
+        red = int(colors_split[0])
+        green = int(colors_split[1])
+        blue = int(colors_split[2])
         border_colors = str(red-20) + "," + str(green-20) + "," + str(blue-20)
         symbol = QgsFillSymbol.createSimple({'color': colors, \
             'outline_color': border_colors, \
-            'outline_width': outlineWidth, \
+            'outline_width': str(outlineWidth), \
             'joinstyle':'round'})
 
         vectorLayer.renderer().setSymbol(symbol)

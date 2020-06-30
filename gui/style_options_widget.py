@@ -18,14 +18,15 @@ class StyleOpstionsWidget(QWidget, FORM_CLASS):
         self.setupUi(self)
     
         self.cbStyles.addItems(list(STYLE_DICT.keys()))
-        self.cbStyles.textChanged.connect()
 
         self.parent = parent
         self.styleSettings = self.parent.styleSettings
+        self.setStyle(self.cbStyles.currentText())
         self.connectSignals()
 
     def connectSignals(self):
         self.tbNext.clicked.connect(self.nextWidget)
+        self.cbStyles.currentTextChanged.connect(self.setStyle)
 
     def nextWidget(self):
         style = self.cbStyles.currentText()
@@ -35,6 +36,7 @@ class StyleOpstionsWidget(QWidget, FORM_CLASS):
         self.styleSettings.mapstyle = self.cbStyles.currentText()
         self.parent.on_next_tab.emit(self)
 
-    def setStyle(self):
-       self.parent.currentstyle = StylesContainer(self.styleSettings).get_style
+    def setStyle(self, text):
+        self.styleSettings.mapstyle = text
+        self.parent.currentStyle = StylesContainer(self.styleSettings).get_style
        

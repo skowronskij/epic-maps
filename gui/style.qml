@@ -1,36 +1,30 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis labelsEnabled="0" simplifyMaxScale="1" styleCategories="AllStyleCategories" readOnly="0" hasScaleBasedVisibilityFlag="0" simplifyDrawingTol="1" minScale="1e+08" version="3.6.3-Noosa" maxScale="0" simplifyDrawingHints="1" simplifyAlgorithm="0" simplifyLocal="1">
+<qgis maxScale="0" labelsEnabled="0" hasScaleBasedVisibilityFlag="0" simplifyDrawingTol="1" readOnly="0" simplifyLocal="1" styleCategories="AllStyleCategories" simplifyAlgorithm="0" simplifyDrawingHints="1" simplifyMaxScale="1" version="3.10.5-A Coruña" minScale="1e+08">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>1</Searchable>
   </flags>
-  <renderer-v2 symbollevels="0" type="singleSymbol" enableorderby="0" forceraster="0">
+  <renderer-v2 symbollevels="0" forceraster="0" type="singleSymbol" enableorderby="0">
     <symbols>
-      <symbol alpha="1" clip_to_extent="1" type="marker" force_rhr="0" name="0">
-        <layer class="SvgMarker" enabled="1" locked="0" pass="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="35,35,35,255"/>
-          <prop k="fixedAspectRatio" v="0"/>
-          <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="C:/Users/osko1/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins/epic-maps/styles/fantasy/resources/medieval.svg"/>
+      <symbol alpha="1" clip_to_extent="1" force_rhr="0" type="fill" name="0">
+        <layer pass="0" locked="0" class="SimpleFill" enabled="1">
+          <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="color" v="252,248,197,255"/>
+          <prop k="joinstyle" v="round"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="35,35,35,255"/>
+          <prop k="outline_color" v="232,228,177,255"/>
+          <prop k="outline_style" v="solid"/>
           <prop k="outline_width" v="0.2"/>
-          <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="outline_width_unit" v="MM"/>
-          <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="6"/>
-          <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="size_unit" v="MM"/>
-          <prop k="vertical_anchor_point" v="1"/>
+          <prop k="style" v="solid"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
@@ -43,8 +37,10 @@
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
-  <geometryOptions geometryPrecision="0" removeDuplicateNodes="0">
-    <activeChecks/>
+  <geometryOptions removeDuplicateNodes="0" geometryPrecision="0">
+    <activeChecks type="StringList">
+      <Option type="QString" value=""/>
+    </activeChecks>
     <checkConfiguration/>
   </geometryOptions>
   <fieldConfiguration/>
@@ -56,15 +52,16 @@
   <constraintExpressions/>
   <expressionfields/>
   <attributeactions>
-    <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
+    <defaultAction key="Canvas" value="{00000000-0000-0000-0000-000000000000}"/>
   </attributeactions>
-  <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
+  <attributetableconfig actionWidgetStyle="dropDown" sortOrder="0" sortExpression="">
     <columns/>
   </attributetableconfig>
   <conditionalstyles>
     <rowstyles/>
     <fieldstyles/>
   </conditionalstyles>
+  <storedexpressions/>
   <editform tolerant="1"></editform>
   <editforminit/>
   <editforminitcodesource>0</editforminitcodesource>
@@ -77,5 +74,5 @@
   <widgets/>
   <previewExpression></previewExpression>
   <mapTip></mapTip>
-  <layerGeometryType>0</layerGeometryType>
+  <layerGeometryType>2</layerGeometryType>
 </qgis>

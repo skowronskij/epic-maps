@@ -2,12 +2,14 @@
 
 from qgis.PyQt.Qt import QItemDelegate, QModelIndex, QAbstractTableModel, Qt
 from qgis.PyQt.QtWidgets import QComboBox
+from qgis.core import QgsWkbTypes
 
 class LayerTypeModel(QAbstractTableModel):
     def __init__(self, parent=None, *args):
         QAbstractTableModel.__init__(self, parent, *args)
         # to co bedziemy potrzebować do zwrócenia albo przetrzymywania informacji
         self.layers = []
+        self.layer_style_map = {}
 
     def columnCount(self, parent=QModelIndex()):
         return 2
@@ -19,7 +21,7 @@ class LayerTypeModel(QAbstractTableModel):
         layers = []
         for key, item in rows.items():
             layers.extend(list(item.keys()))
-        self.beginInsertRows(parent, position, position + len(rows) - 1)
+        self.beginInsertRows(parent, position, position + len(layers) - 1)
         for i, layer in enumerate(layers):
             self.layers.insert(position+i, layer)
         self.endInsertRows()
@@ -48,30 +50,58 @@ class LayerTypeModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
             if index.column() == 0:
                 return layer.name()
+        elif role == Qt.UserRole:
+            if index.column() == 1:
+                return layer
+
+    def setData(self, index, value, role):
+        layer = self.layers[index.row()]
+        if role == Qt.EditRole:
+            self.layer_style_map[layer] = value
+            return True
 
     def flags(self, model):
         if not model.isValid():
             return
         return Qt.ItemIsEnabled | Qt.ItemIsEditable
 
-class LayerDelegate(QItemDelegate):
-    def __init__(self, parent=None):
+class LayerTypeDelegate(QItemDelegate):
+    def __init__(self, style_types, parent=None):
         QItemDelegate.__init__(self, parent)
-
+        self.style_types = style_types
+        #{"points":["Battles","Towns","Other"],
+        # "lines":["Rivers","Routes","Other"],
+        # "polygons":["Lands","Waters","Forests","Mountains","Other"]}
     
     def createEditor(self, parent, option, index):
-        layer_name = index.data(Qt.UserRole).name()
-        editor = QComboBox(layer_name, parent)
-        editor.clicked.connect(self.valueChanged)
-        return editor
+        if index.column() == 1:
+            layer = index.data(Qt.UserRole)
+            layer_type = self.getLayerType(layer)
+            if not layer_type:
+                return
+            editor = QComboBox(parent)
+            editor.addItems(self.style_types[layer_type])
+            editor.currentTextChanged.connect(self.valueChanged)
+            return editor
+
+    def getLayerType(self, layer):
+        if layer.geometryType() == QgsWkbTypes.PointGeometry:
+            return 'points'
+        if layer.geometryType() == QgsWkbTypes.LineGeometry:
+            return 'lines'
+        if layer.geometryType() == QgsWkbTypes.PolygonGeometry:
+            return 'polygons'
+        # jeśli typ gemoetrii inny niż przewidywany zwracamy none
+        return None
 
     def setEditorData(self, editor, index):
         editor.blockSignals(True)
-        editor.setChecked(False)
+        if isinstance(editor, QComboBox):
+            editor.setCurrentIndex(0)
         editor.blockSignals(False)
     
     def setModelData(self, editor, model, index):
-        model.setData(index, editor.isChecked(), Qt.EditRole)
+        model.setData(index, editor.currentText(), Qt.EditRole)
 
     def valueChanged(self):
         self.commitData.emit(self.sender())
