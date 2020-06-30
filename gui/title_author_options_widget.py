@@ -5,6 +5,8 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import QWidget
 
+from ..models.layerTypeModel import LayerTypeModel, LayerTypeDelegate
+
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'title_author_options_widget.ui'))
 
@@ -16,11 +18,29 @@ class TitleAuthorOptionsWidget(QWidget, FORM_CLASS):
 
         self.parent = parent
         self.styleSettings = self.parent.styleSettings
+        self.tvLayersType.setModel(LayerTypeModel())
+        self.tvLayersType.setItemDelegate(LayerTypeDelegate(self.parent.currentStyle.stylesettings.types, self))
+
         self.connectSignals()
+
+    def show(self):
+        self.setLayerList()
+        super(TitleAuthorOptionsWidget, self).show()
+
+    def setLayerList(self):
+        self.tvLayersType.model().removeRows()
+        model = self.tvLayersType.model()
+        layers = self.styleSettings.layers
+        model.insertRows(0, layers)
+        for row in range(0, model.rowCount()):
+           self.tvLayersType.openPersistentEditor(model.index(row, 1))
 
     def connectSignals(self):
         self.tbPrevious.clicked.connect(self.prevWidget)
         self.tbGenerate.clicked.connect(self.settingsCompleted)
+
+    def getLayerStyleMap(self):
+        return self.tvLayersType.model().layer_style_map
 
     def prevWidget(self):
         self.parent.on_previous_tab.emit()
@@ -32,4 +52,4 @@ class TitleAuthorOptionsWidget(QWidget, FORM_CLASS):
     def setSettings(self):
         self.styleSettings.title = self.leTitle.text()
         self.styleSettings.author = self.leAuthor.text()
-        
+

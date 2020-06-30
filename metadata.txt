@@ -6,7 +6,7 @@
 name=Epic Maps
 qgisMinimumVersion=3.0
 description=Making stylish maps was never so easy!
-version=0.1
+version=0.1.1
 author=Mateusz Ośko, Piotr Koller, Jakub Skowroński
 email=sekcja.geoinformacji.skng@gmail.com
 
