@@ -30,11 +30,11 @@ class FantasyStyle(BaseStyle):
 
     def stylePolygonForests(self, vectorLayer):
         epsg = vectorLayer.crs().authid()
-        self.polygon2markers(vectorLayer, epsg, os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","tree.svg"))
+        self.polygon2markers(vectorLayer, epsg, "forest", os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","tree.svg"))
 
     def stylePolygonMountains(self, vectorLayer):
         epsg = vectorLayer.crs().authid()
-        self.polygon2markers(vectorLayer, epsg, os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","mountain.svg"))
+        self.polygon2markers(vectorLayer, epsg, "mountain", os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","mountain.svg"))
 
     def stylePointTowns(self,vectorLayer):
         self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","monuments.svg"))

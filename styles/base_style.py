@@ -76,7 +76,7 @@ class BaseStyle:
                 lines.renderer().setSymbol(lines_symbol)
                 registry.addMapLayer(lines)
 
-    def polygon2markers(self, vectorLayer, epsg, marker_filename):
+    def polygon2markers(self, vectorLayer, epsg, type, marker_filename):
         provider = "memory"
         layerSource = 'Point?crs=' + epsg
         pLayer = QgsVectorLayer(layerSource, "markers", provider)
@@ -86,7 +86,10 @@ class BaseStyle:
             polygon = feature.geometry()
             extend = polygon.boundingBox()
 
-            number_of_points = 50 #póki co przypadkowa wartość, trzeba to jeszcze przemyśleć
+            if type == "forest":
+                number_of_points = round(polygon.area()*100)
+            elif type == "mountain":
+                number_of_points = round(polygon.area()*10)
 
             while True:
                 x = random.uniform(extend.xMinimum(), extend.xMaximum())
@@ -104,7 +107,10 @@ class BaseStyle:
         QgsProject().instance().addMapLayer(pLayer)
 
         symbol = QgsSvgMarkerSymbolLayer(marker_filename)
-        symbol.setSize(4) #póki co przypadkowa wartość, trzeba to jeszcze przemyśleć
+        if type == "forest":
+            symbol.setSize(4)
+        elif type == "mountain":
+            symbol.setSize(10)
         pLayer.renderer().symbol().changeSymbolLayer(0, symbol )
 
     def restyleLine(self, vectorLayer, colors, width, style='solid'):
