@@ -71,8 +71,8 @@ class BaseStyle:
                 lines = processing.run("qgis:polygonstolines", {'INPUT':buff, 'OUTPUT':'memory:'})['OUTPUT']
                 
                 lines_symbol = QgsLineSymbol.createSimple({'outline_color': border_colors, \
-                    'outline_width':'0.2', 'joinstyle':'round', \
-                    'use_custom_dash': '1', 'customdash': dash})
+                    'outline_width':'1', 'joinstyle':'round', \
+                    'use_custom_dash': '1.8', 'customdash': dash})
                 lines.renderer().setSymbol(lines_symbol)
                 registry.addMapLayer(lines)
 
@@ -82,6 +82,7 @@ class BaseStyle:
         pLayer = QgsVectorLayer(layerSource, "markers", provider)
 
         features = vectorLayer.getFeatures()
+
         for feature in features:
             polygon = feature.geometry()
             extend = polygon.boundingBox()
@@ -106,12 +107,13 @@ class BaseStyle:
         pLayer.updateExtents()
         QgsProject().instance().addMapLayer(pLayer)
 
-        symbol = QgsSvgMarkerSymbolLayer(marker_filename)
+        symbol = QgsSvgMarkerSymbolLayer(random.choice(marker_filename))
         if type == "forest":
             symbol.setSize(4)
         elif type == "mountain":
-            symbol.setSize(10)
+            symbol.setSize(12)
         pLayer.renderer().symbol().changeSymbolLayer(0, symbol )
+
 
     def restyleLine(self, vectorLayer, colors, width, style='solid'):
         lines_symbol = QgsLineSymbol.createSimple({'line_color': colors, \
