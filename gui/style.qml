@@ -1,30 +1,30 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis styleCategories="AllStyleCategories" simplifyAlgorithm="0" labelsEnabled="0" readOnly="0" maxScale="0" version="3.6.3-Noosa" minScale="1e+08" simplifyDrawingHints="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" simplifyMaxScale="1" simplifyDrawingTol="1">
+<qgis version="3.10.5-A Coruña" simplifyDrawingHints="1" simplifyAlgorithm="0" minScale="1e+08" labelsEnabled="0" simplifyLocal="1" hasScaleBasedVisibilityFlag="0" simplifyMaxScale="1" readOnly="0" maxScale="0" styleCategories="AllStyleCategories" simplifyDrawingTol="1">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>1</Searchable>
   </flags>
-  <renderer-v2 type="singleSymbol" forceraster="0" enableorderby="0" symbollevels="0">
+  <renderer-v2 forceraster="0" type="singleSymbol" symbollevels="0" enableorderby="0">
     <symbols>
-      <symbol type="fill" name="0" force_rhr="0" clip_to_extent="1" alpha="1">
-        <layer class="SimpleFill" enabled="1" locked="0" pass="0">
-          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
-          <prop v="168,207,249,255" k="color"/>
-          <prop v="round" k="joinstyle"/>
-          <prop v="0,0" k="offset"/>
-          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
-          <prop v="MM" k="offset_unit"/>
-          <prop v="148,187,229,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0.15" k="outline_width"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="solid" k="style"/>
+      <symbol type="fill" alpha="1" clip_to_extent="1" force_rhr="0" name="0">
+        <layer pass="0" class="SimpleFill" enabled="1" locked="0">
+          <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="color" v="120,214,248,255"/>
+          <prop k="joinstyle" v="round"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="100,194,228,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0.15"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" value="" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" value="collection" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
@@ -37,8 +37,10 @@
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
-  <geometryOptions removeDuplicateNodes="0" geometryPrecision="0">
-    <activeChecks/>
+  <geometryOptions geometryPrecision="0" removeDuplicateNodes="0">
+    <activeChecks type="StringList">
+      <Option type="QString" value=""/>
+    </activeChecks>
     <checkConfiguration/>
   </geometryOptions>
   <fieldConfiguration/>
@@ -50,15 +52,16 @@
   <constraintExpressions/>
   <expressionfields/>
   <attributeactions>
-    <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
+    <defaultAction key="Canvas" value="{00000000-0000-0000-0000-000000000000}"/>
   </attributeactions>
-  <attributetableconfig sortOrder="0" sortExpression="" actionWidgetStyle="dropDown">
+  <attributetableconfig sortExpression="" sortOrder="0" actionWidgetStyle="dropDown">
     <columns/>
   </attributetableconfig>
   <conditionalstyles>
     <rowstyles/>
     <fieldstyles/>
   </conditionalstyles>
+  <storedexpressions/>
   <editform tolerant="1"></editform>
   <editforminit/>
   <editforminitcodesource>0</editforminitcodesource>

@@ -1,32 +1,90 @@
-import random
+import random, os
 from qgis.core import *
 from qgis.gui import *
 from qgis import processing
+from qgis.PyQt.QtGui import QFont
+from qgis.PyQt.QtXml import QDomDocument
+from qgis.utils import iface
 
 class BaseStyle:
     def __init__(self, stylesettings):
         self.stylesettings = stylesettings
     
     def _create_landscape_layout(self):
-        self.landscape_path = ":/templates/landscape.qpt"
-        self.portrait_path = ":/templates/portrait.qpt"
 
-        with open(path) as f:
-                content = f.read()
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))
+        template_path = os.path.join(path, '%s.qpt' % self.stylesettings.orientation)
+
+        with open(template_path) as f:
+            content = f.read()
 
         substitution_map = {
-            'Tytuł': self.stylesettings.title.strip(),
-            'Autor': self.stylesettings.author.strip()
+            'Tytuł': self.stylesettings.title,
+            'Autorr': self.stylesettings.author,
+            # 'Logo': None
         }
         for before, after in substitution_map.items():
             content = content.replace(before, after)
 
+        #Wczytanie szablonu wydruku
         layoutManager = QgsProject().instance().layoutManager()
         document = QDomDocument()
         document.setContent(content)
         layout = QgsPrintLayout(QgsProject.instance())
         layout.loadFromTemplate(document, QgsReadWriteContext())
         layoutName = self.stylesettings.title.split('\n')[0]
+        
+        #Unikanie takich samych nazw layoutów
+        i=0
+        while layoutManager.layoutByName(layoutName):
+            # Dodawanie _numer do konca nazwy, jesli layout o danej nazwie istnieje
+            layoutName = self.stylesettings.title + '_' + str(i)
+            i += 1
+        layout.setName(layoutName)
+        
+        #Zmiana rozmiwaru strony oraz zapisanie współczinnika służącego do skalowania obiektów na stronie
+        page = layout.pageCollection().page(0)
+        defaultPageSizeX = page.sizeWithUnits().width()
+        defaultPageSizeY = page.sizeWithUnits().height()
+        pageOrientation = {'portrait':0, 'landscape':1}
+        page.setPageSize(self.stylesettings.size, pageOrientation.get(self.stylesettings.orientation))
+        newPageSizeX = page.sizeWithUnits().width()
+        newPageSizeY = page.sizeWithUnits().height()
+        xRatio = newPageSizeX/defaultPageSizeX
+        yRatio = newPageSizeY/defaultPageSizeY
+        
+        #Odnajdywanie obiektów i nadawanie im odpowiednich dla wielkości strony rozmiarów oraz miejsca
+        itemIds = ['title', 'map', 'scale', 'legend', 'author', 'logo']
+        for itemId in itemIds:
+            item = layout.itemById(itemId)
+            #Pozycja obiektu
+            px, py = item.pagePos().x(), item.pagePos().y()
+            item.attemptMove(QgsLayoutPoint(px*xRatio, py*yRatio))
+            #Rozmiar obiektu
+            sx, sy = item.sizeWithUnits().width(), item.sizeWithUnits().height()
+            item.attemptResize(QgsLayoutSize(sx*xRatio, sy*yRatio))
+            if itemId == 'map':
+                map_ = item
+                item.setLayers(self._get_layers())
+                item.zoomToExtent(iface.mapCanvas().extent())
+            elif itemId == 'title' or itemId == 'subtitle' or itemId == 'author':
+                fontSize = item.font().pointSize()
+                font = QFont('Arial', fontSize*yRatio)
+                item.setFont(font)
+            elif itemId == 'legend':
+                item.setLinkedMap(map_)
+                item.setLegendFilterByMapEnabled(True)
+            item.refresh()
+        
+        layout.refresh()
+        layoutManager.addLayout(layout)
+        iface.openLayoutDesigner(layout)
+
+    def _get_layers(self):
+        layers = []
+        for layers_meta in self.stylesettings.layers.values():
+            layers.extend(list(layers_meta.keys()))
+        return layers
 
     def generate_layout(self):
         pass
