@@ -139,15 +139,19 @@ class BaseStyle:
                 lines = processing.run("qgis:polygonstolines", {'INPUT':buff, 'OUTPUT':'memory:'})['OUTPUT']
                 
                 lines_symbol = QgsLineSymbol.createSimple({'outline_color': border_colors, \
-                    'outline_width':'1', 'joinstyle':'round', \
-                    'use_custom_dash': '1.8', 'customdash': dash})
+                    'outline_width': str(5/bb.area()), 'joinstyle':'round', \
+                    'use_custom_dash': str(5.8/bb.area()), 'customdash': dash})
                 lines.renderer().setSymbol(lines_symbol)
                 registry.addMapLayer(lines)
 
     def polygon2markers(self, vectorLayer, epsg, type, marker_filename):
         provider = "memory"
         layerSource = 'Point?crs=' + epsg
+
         pLayer = QgsVectorLayer(layerSource, "markers", provider)
+        pLayer2 = QgsVectorLayer(layerSource, "markers2", provider)
+        if type == "mountain":
+            pLayer3 = QgsVectorLayer(layerSource, "markers3", provider)
 
         features = vectorLayer.getFeatures()
 
@@ -155,32 +159,51 @@ class BaseStyle:
             polygon = feature.geometry()
             extend = polygon.boundingBox()
 
-            if type == "forest":
-                number_of_points = round(polygon.area()*100)
-            elif type == "mountain":
-                number_of_points = round(polygon.area()*10)
+            def layer_create(layer):
+                if type == "forest":
+                    number_of_points = random.randint(int(round(polygon.area()*100)*0.85),int(round(polygon.area()*100)*1.15))
+                elif type == "mountain":
+                    number_of_points = random.randint(int(round(polygon.area()*10)*0.85),int(round(polygon.area()*10)*1.15))
+                while True:
+                    x = random.uniform(extend.xMinimum(), extend.xMaximum())
+                    y = random.uniform(extend.yMinimum(), extend.yMaximum())
+                    point = QgsPointXY(x,y)
+                    geopoint = QgsGeometry.fromPointXY(point)
+                    if geopoint.within(polygon):
+                        feature = QgsFeature()
+                        feature.setGeometry(geopoint)
+                        layer.dataProvider().addFeature(feature)
+                        number_of_points -= 1
+                    if number_of_points <= 0:
+                        break
 
-            while True:
-                x = random.uniform(extend.xMinimum(), extend.xMaximum())
-                y = random.uniform(extend.yMinimum(), extend.yMaximum())
-                point = QgsPointXY(x,y)
-                geopoint = QgsGeometry.fromPointXY(point)
-                if geopoint.within(polygon):
-                    feature = QgsFeature()
-                    feature.setGeometry(geopoint)
-                    pLayer.dataProvider().addFeature(feature)
-                    number_of_points -= 1
-                if number_of_points <= 0:
-                    break
+            layer_create(pLayer)
+            layer_create(pLayer2)
+            if type == "mountain":
+                layer_create(pLayer3)
+
         pLayer.updateExtents()
+        pLayer2.updateExtents()
         QgsProject().instance().addMapLayer(pLayer)
+        QgsProject().instance().addMapLayer(pLayer2)
+        if type == "mountain":
+            QgsProject().instance().addMapLayer(pLayer3)
 
-        symbol = QgsSvgMarkerSymbolLayer(random.choice(marker_filename))
+        random_icons = random.sample(marker_filename,len(marker_filename))
+        symbol = QgsSvgMarkerSymbolLayer(random_icons[0])
+        symbol2 = QgsSvgMarkerSymbolLayer(random_icons[1])
         if type == "forest":
             symbol.setSize(4)
+            symbol2.setSize(4)
         elif type == "mountain":
             symbol.setSize(12)
+            symbol2.setSize(12)
+            symbol3 = QgsSvgMarkerSymbolLayer(random_icons[2])
+            symbol3.setSize(12)
         pLayer.renderer().symbol().changeSymbolLayer(0, symbol )
+        pLayer2.renderer().symbol().changeSymbolLayer(0, symbol2 )
+        if type == "mountain":
+            pLayer3.renderer().symbol().changeSymbolLayer(0, symbol3 )
 
 
     def restyleLine(self, vectorLayer, colors, width, style='solid'):
