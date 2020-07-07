@@ -7,19 +7,25 @@
   </flags>
   <renderer-v2 type="singleSymbol" forceraster="0" symbollevels="0" enableorderby="0">
     <symbols>
-      <symbol type="fill" alpha="1" force_rhr="0" name="0" clip_to_extent="1">
-        <layer class="SimpleFill" pass="0" locked="0" enabled="1">
-          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
-          <prop v="190,207,80,255" k="color"/>
-          <prop v="bevel" k="joinstyle"/>
+      <symbol type="marker" alpha="1" force_rhr="0" name="0" clip_to_extent="1">
+        <layer class="SvgMarker" pass="0" locked="0" enabled="1">
+          <prop v="0" k="angle"/>
+          <prop v="35,35,35,255" k="color"/>
+          <prop v="0" k="fixedAspectRatio"/>
+          <prop v="1" k="horizontal_anchor_point"/>
+          <prop v="C:\Users\osko1\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\epic-maps\styles\fantasy\resources\medieval.svg" k="name"/>
           <prop v="0,0" k="offset"/>
           <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
           <prop v="MM" k="offset_unit"/>
           <prop v="35,35,35,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0.26" k="outline_width"/>
+          <prop v="0.2" k="outline_width"/>
+          <prop v="3x:0,0,0,0,0,0" k="outline_width_map_unit_scale"/>
           <prop v="MM" k="outline_width_unit"/>
-          <prop v="solid" k="style"/>
+          <prop v="diameter" k="scale_method"/>
+          <prop v="6" k="size"/>
+          <prop v="3x:0,0,0,0,0,0" k="size_map_unit_scale"/>
+          <prop v="MM" k="size_unit"/>
+          <prop v="1" k="vertical_anchor_point"/>
           <data_defined_properties>
             <Option type="Map">
               <Option value="" type="QString" name="name"/>
@@ -71,5 +77,5 @@
   <widgets/>
   <previewExpression></previewExpression>
   <mapTip></mapTip>
-  <layerGeometryType>2</layerGeometryType>
+  <layerGeometryType>0</layerGeometryType>
 </qgis>
