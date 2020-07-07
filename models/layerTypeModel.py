@@ -66,9 +66,10 @@ class LayerTypeModel(QAbstractTableModel):
         return Qt.ItemIsEnabled | Qt.ItemIsEditable
 
 class LayerTypeDelegate(QItemDelegate):
-    def __init__(self, style_types, parent=None):
+    def __init__(self, style_types, model, parent=None):
         QItemDelegate.__init__(self, parent)
         self.style_types = style_types
+        self.model = model
         #{"points":["Battles","Towns","Other"],
         # "lines":["Rivers","Routes","Other"],
         # "polygons":["Lands","Waters","Forests","Mountains","Other"]}
@@ -81,7 +82,7 @@ class LayerTypeDelegate(QItemDelegate):
                 return
             editor = QComboBox(parent)
             editor.addItems(self.style_types[layer_type])
-            editor.currentTextChanged.connect(self.valueChanged)
+            editor.currentIndexChanged.connect(self.valueChanged)
             return editor
 
     def getLayerType(self, layer):
@@ -98,6 +99,7 @@ class LayerTypeDelegate(QItemDelegate):
         editor.blockSignals(True)
         if isinstance(editor, QComboBox):
             editor.setCurrentIndex(0)
+            self.setModelData(editor, self.model, index)
         editor.blockSignals(False)
     
     def setModelData(self, editor, model, index):

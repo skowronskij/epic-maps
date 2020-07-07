@@ -72,7 +72,6 @@ class FantasyStyle(BaseStyle):
             layer_type = self.getLayerType(layer)
             method_name = f'style{layer_type}{style}'
             method = getattr(self, method_name)
-            # print(method)
             method(layer)
         self._create_landscape_layout()
 

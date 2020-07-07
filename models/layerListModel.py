@@ -2,6 +2,7 @@
 
 from qgis.PyQt.Qt import QItemDelegate, QModelIndex, QAbstractListModel, Qt
 from qgis.PyQt.QtWidgets import QCheckBox
+from qgis.core import QgsWkbTypes
 
 class LayersListModel(QAbstractListModel):    
     def __init__(self, parent=None, *args):
@@ -31,6 +32,8 @@ class LayersListModel(QAbstractListModel):
             return True
 
     def insertRows(self, position, rows, parent=QModelIndex()):
+        rows = [layer for layer in rows if not layer.geometryType() 
+            in (QgsWkbTypes.NullGeometry, QgsWkbTypes.UnknownGeometry)]
         self.beginInsertRows(parent, position, position + len(rows) - 1)
         for i, layer in enumerate(rows):
             self.layers.insert(position+i, layer)
@@ -55,11 +58,13 @@ class LayersListModel(QAbstractListModel):
 class LayerDelegate(QItemDelegate):
     def __init__(self, parent=None):
         QItemDelegate.__init__(self, parent)
-    
+        self.editors = []
+
     def createEditor(self, parent, option, index):
         layer_name = index.data(Qt.UserRole).name()
         editor = QCheckBox(layer_name, parent)
-        editor.clicked.connect(self.valueChanged)
+        editor.stateChanged.connect(self.valueChanged)
+        self.editors.append(editor)
         return editor
 
     def setEditorData(self, editor, index):

@@ -18,8 +18,9 @@ class TitleAuthorOptionsWidget(QWidget, FORM_CLASS):
 
         self.parent = parent
         self.styleSettings = self.parent.styleSettings
-        self.tvLayersType.setModel(LayerTypeModel())
-        self.tvLayersType.setItemDelegate(LayerTypeDelegate(self.parent.currentStyle.stylesettings.types, self))
+        model = LayerTypeModel()
+        self.tvLayersType.setModel(model)
+        self.tvLayersType.setItemDelegate(LayerTypeDelegate(self.parent.currentStyle.stylesettings.types, model, self))
 
         self.connectSignals()
 

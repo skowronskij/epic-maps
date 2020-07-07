@@ -32,6 +32,8 @@ class LayersPageOptionsWidget(QWidget, FORM_CLASS):
     def connectSignals(self):
         self.tbNext.clicked.connect(self.nextWidget)
         self.tbPrevious.clicked.connect(self.prevWidget)
+        self.tbSelectAll.clicked.connect(lambda: self.setLayersChecked(True))
+        self.tbDeselectAll.clicked.connect(lambda: self.setLayersChecked(False))
 
     def nextWidget(self):
         succes, error = self.setSettings()
@@ -62,9 +64,15 @@ class LayersPageOptionsWidget(QWidget, FORM_CLASS):
         self.styleSettings.orientation = orientation
         return True, None
 
+    def setLayersChecked(self, state):
+        delegate = self.lvLayers.itemDelegate()
+        for e in delegate.editors:
+            e.setChecked(state)
+
     def setLayerList(self):
-        self.lvLayers.model().removeRows()
         model = self.lvLayers.model()
+        model.removeRows()
+        self.lvLayers.itemDelegate().editors = []
         layers = [
             layer for layer in QgsProject.instance().mapLayers().values() 
             if layer.type() == QgsMapLayer.VectorLayer
