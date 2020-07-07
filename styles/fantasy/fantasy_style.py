@@ -36,14 +36,14 @@ class FantasyStyle(BaseStyle):
         self.polygon2markers(vectorLayer, epsg, "mountain", [os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","mountain1.svg"),os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","mountain2.svg"),os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","mountain3.svg")])
 
     def stylePointTowns(self,vectorLayer):
-        self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","monuments.svg"))
-        self.symbol.setSize(6)
+        self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","city_small.svg"))
+        self.symbol.setSize(16)
         vectorLayer.renderer().symbol().changeSymbolLayer(0, self.symbol )
         vectorLayer.triggerRepaint()
 
     def stylePointBattles(self,vectorLayer):
-        self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","medieval.svg"))
-        self.symbol.setSize(6)
+        self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","battle_swords.svg"))
+        self.symbol.setSize(10)
         vectorLayer.renderer().symbol().changeSymbolLayer(0, self.symbol )
         vectorLayer.triggerRepaint()
 
