@@ -19,10 +19,11 @@ class BaseStyle:
             content = f.read()
 
         substitution_map = {
-            'Tytuł': self.stylesettings.title,
+            'Tytul': self.stylesettings.title,
             'Autorr': self.stylesettings.author,
-            # 'Logo': None
         }
+        if self.stylesettings.author == "":
+            substitution_map['Map drawn by'] = ""
         for before, after in substitution_map.items():
             content = content.replace(before, after)
 
@@ -54,27 +55,36 @@ class BaseStyle:
         yRatio = newPageSizeY/defaultPageSizeY
         
         #Odnajdywanie obiektów i nadawanie im odpowiednich dla wielkości strony rozmiarów oraz miejsca
-        itemIds = ['title', 'map', 'scale', 'legend', 'author', 'logo']
+        itemIds = ['title', 'map', 'scale', 'legend', 'author', 'logo', 'logo2'] #TODO prefixy zamiast dokładnych nazw
         for itemId in itemIds:
             item = layout.itemById(itemId)
-            #Pozycja obiektu
-            px, py = item.pagePos().x(), item.pagePos().y()
-            item.attemptMove(QgsLayoutPoint(px*xRatio, py*yRatio))
-            #Rozmiar obiektu
-            sx, sy = item.sizeWithUnits().width(), item.sizeWithUnits().height()
-            item.attemptResize(QgsLayoutSize(sx*xRatio, sy*yRatio))
-            if itemId == 'map':
-                map_ = item
-                item.setLayers(self._get_layers())
-                item.zoomToExtent(iface.mapCanvas().extent())
-            elif itemId == 'title' or itemId == 'subtitle' or itemId == 'author':
-                fontSize = item.font().pointSize()
-                font = QFont('Arial', fontSize*yRatio)
-                item.setFont(font)
-            elif itemId == 'legend':
-                item.setLinkedMap(map_)
-                item.setLegendFilterByMapEnabled(True)
-            item.refresh()
+            if item != None:
+                #Pozycja obiektu
+                px, py = item.pagePos().x(), item.pagePos().y()
+                item.attemptMove(QgsLayoutPoint(px*xRatio, py*yRatio))
+                #Rozmiar obiektu
+                sx, sy = item.sizeWithUnits().width(), item.sizeWithUnits().height()
+                item.attemptResize(QgsLayoutSize(sx*xRatio, sy*yRatio))
+                if itemId == 'map':
+                    map_ = item
+                    item.setLayers(self._get_layers())
+                    item.zoomToExtent(iface.mapCanvas().extent())
+                elif itemId == 'title' or itemId == 'subtitle' or itemId == 'author':
+                    fontSize = item.font().pointSize()
+                    font = QFont('Pristina', fontSize*yRatio) #TODO nazwa czcionki kopiowana automatycznie!
+                    item.setFont(font)
+                elif itemId == 'legend':
+                    item.setLinkedMap(map_)
+                    item.setLegendFilterByMapEnabled(True)
+                elif itemId == 'logo':
+                    item.setPicturePath(os.path.join(path, "old-paper.jpg"))
+                elif itemId == "scale":
+                    item.setMinimumBarWidth(item.minimumBarWidth() * xRatio)
+                    item.setMaximumBarWidth(item.maximumBarWidth() * xRatio)
+                    fontSize = item.font().pointSize()
+                    font = QFont('Pristina', fontSize*yRatio)
+                    item.setFont(font)
+                item.refresh()
         
         layout.refresh()
         layoutManager.addLayout(layout)
