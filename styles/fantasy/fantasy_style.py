@@ -15,7 +15,6 @@ class FantasyStyle(BaseStyle):
 
     def generate_layout(self):
         super().generate_layout(self)
-        #tutaj jakaś logika która wywołuje odpowiednie funkcje dla odpowiednich warstw
 
     #Style - do przetestowania!
     def stylePolygonLands(self, vectorLayer):   

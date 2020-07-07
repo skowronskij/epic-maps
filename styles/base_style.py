@@ -127,7 +127,7 @@ class BaseStyle:
             bb = vectorLayer.boundingBoxOfSelected()
             vectorLayer.removeSelection()
             mean = (bb.height() + bb.width()) / 2
-            bufDist = int(mean / 100)
+            bufDist = mean / 100
             bufDist2 = bufDist * 2
 
             buffs = []
@@ -139,8 +139,8 @@ class BaseStyle:
                 lines = processing.run("qgis:polygonstolines", {'INPUT':buff, 'OUTPUT':'memory:'})['OUTPUT']
                 
                 lines_symbol = QgsLineSymbol.createSimple({'outline_color': border_colors, \
-                    'outline_width': str(5/bb.area()), 'joinstyle':'round', \
-                    'use_custom_dash': str(5.8/bb.area()), 'customdash': dash})
+                    'outline_width':'0.2', 'joinstyle':'round', \
+                    'use_custom_dash': '1', 'customdash': dash})
                 lines.renderer().setSymbol(lines_symbol)
                 registry.addMapLayer(lines)
 
@@ -153,17 +153,24 @@ class BaseStyle:
         if type == "mountain":
             pLayer3 = QgsVectorLayer(layerSource, "markers3", provider)
 
+        layer_transformed = processing.run('qgis:reprojectlayer', {'INPUT': vectorLayer, 'TARGET_CRS': 'EPSG:4326', 'OUTPUT': 'memory:'})['OUTPUT']
+        features_transformed = layer_transformed.getFeatures()
         features = vectorLayer.getFeatures()
 
-        for feature in features:
+        for feature, feature_transformed in zip(features, features_transformed):
             polygon = feature.geometry()
             extend = polygon.boundingBox()
 
-            def layer_create(layer):
+            polygon_transformed = feature_transformed.geometry()
+
+            def layer_create(layer): #TODO TO POWINNA BYĆ METODA
                 if type == "forest":
-                    number_of_points = random.randint(int(round(polygon.area()*100)*0.85),int(round(polygon.area()*100)*1.15))
+                    number_of_points = random.randint(int(round(polygon_transformed.area()*1000 )*0.85),int(round(polygon_transformed.area()*1000)*1.15)) 
+                    #TODO 1000 powinno być argumentem funkcji
                 elif type == "mountain":
-                    number_of_points = random.randint(int(round(polygon.area()*10)*0.85),int(round(polygon.area()*10)*1.15))
+                    number_of_points = random.randint(int(round(polygon_transformed.area()*100)*0.85),int(round(polygon_transformed.area()*100)*1.15))
+                if number_of_points > 10000: #TODO przemyśleć to
+                    number_of_points = 10000
                 while True:
                     x = random.uniform(extend.xMinimum(), extend.xMaximum())
                     y = random.uniform(extend.yMinimum(), extend.yMaximum())
@@ -204,7 +211,6 @@ class BaseStyle:
         pLayer2.renderer().symbol().changeSymbolLayer(0, symbol2 )
         if type == "mountain":
             pLayer3.renderer().symbol().changeSymbolLayer(0, symbol3 )
-
 
     def restyleLine(self, vectorLayer, colors, width, style='solid'):
         lines_symbol = QgsLineSymbol.createSimple({'line_color': colors, \
