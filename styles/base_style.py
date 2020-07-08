@@ -229,10 +229,10 @@ class BaseStyle:
             symbol.setSize(4)
             symbol2.setSize(4)
         elif type == "mountain":
-            symbol.setSize(12)
-            symbol2.setSize(12)
+            symbol.setSize(11)
+            symbol2.setSize(11)
             symbol3 = QgsSvgMarkerSymbolLayer(random_icons[2])
-            symbol3.setSize(12)
+            symbol3.setSize(11)
         pLayer.renderer().symbol().changeSymbolLayer(0, symbol )
         pLayer2.renderer().symbol().changeSymbolLayer(0, symbol2 )
         if type == "mountain":
