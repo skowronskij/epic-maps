@@ -53,6 +53,10 @@ class BaseStyle:
         newPageSizeY = page.sizeWithUnits().height()
         xRatio = newPageSizeX/defaultPageSizeX
         yRatio = newPageSizeY/defaultPageSizeY
+
+        root = QgsProject.instance().layerTreeRoot()
+        group = root.findGroup(f'Epic Maps {self.stylesettings.mapstyle} - {self.stylesettings.title}')
+        layers = self._sort_layers([layer.layer() for layer in group.findLayers()])
         
         #Odnajdywanie obiektów i nadawanie im odpowiednich dla wielkości strony rozmiarów oraz miejsca
         itemIds = ['title', 'map', 'scale', 'legend', 'author', 'logo', 'logo2'] #TODO prefixy zamiast dokładnych nazw
@@ -67,7 +71,7 @@ class BaseStyle:
                 item.attemptResize(QgsLayoutSize(sx*xRatio, sy*yRatio))
                 if itemId == 'map':
                     map_ = item
-                    item.setLayers(self._get_layers())
+                    item.setLayers(self._get_layers(layers))
                     item.zoomToExtent(iface.mapCanvas().extent())
                 elif itemId == 'title' or itemId == 'subtitle' or itemId == 'author':
                     fontSize = item.font().pointSize()
@@ -90,11 +94,30 @@ class BaseStyle:
         layoutManager.addLayout(layout)
         iface.openLayoutDesigner(layout)
 
-    def _get_layers(self):
-        layers = []
-        for layers_meta in self.stylesettings.layers.values():
-            layers.extend(list(layers_meta.keys()))
-        return layers
+    def _get_layers(self, layers):
+        output_layers = []
+        for layers_meta in layers.values():
+            output_layers.extend(list(layers_meta.keys()))
+        return output_layers
+
+    def _sort_layers(self, layers):
+        points = {}
+        lines = {}
+        polys = {}
+        for layer in layers:
+            if layer.geometryType() == QgsWkbTypes.PointGeometry:
+                points.update({layer: layer.featureCount()})
+            elif layer.geometryType() == QgsWkbTypes.LineGeometry:
+                length = sum([f.geometry().length() for f in layer.getFeatures()])
+                lines.update({layer: length})
+            elif layer.geometryType() == QgsWkbTypes.PolygonGeometry:
+                area = sum([f.geometry().area() for f in layer.getFeatures()])
+                polys.update({layer: area})
+        return {
+            'points': {layer: count for layer, count in sorted(points.items(), key=lambda item: item[1])},
+            'lines': {layer: length for layer, length in sorted(lines.items(), key=lambda item: item[1])},
+            'polys': {layer: area for layer, area in sorted(polys.items(), key=lambda item: item[1])}
+        }
 
     def generate_layout(self):
         pass
@@ -122,6 +145,8 @@ class BaseStyle:
         
         if make_boundary_waves:
             registry = QgsProject.instance()
+            root = registry.layerTreeRoot()
+            group = root.findGroup(f'Epic Maps {self.stylesettings.mapstyle} - {self.stylesettings.title}')
 
             vectorLayer.selectAll()
             bb = vectorLayer.boundingBoxOfSelected()
@@ -142,7 +167,8 @@ class BaseStyle:
                     'outline_width':'0.2', 'joinstyle':'round', \
                     'use_custom_dash': '1', 'customdash': dash})
                 lines.renderer().setSymbol(lines_symbol)
-                registry.addMapLayer(lines)
+                registry.addMapLayer(lines, False)
+                group.addLayer(lines)
 
     def polygon2markers(self, vectorLayer, epsg, type, marker_filename):
         provider = "memory"
@@ -191,10 +217,10 @@ class BaseStyle:
 
         pLayer.updateExtents()
         pLayer2.updateExtents()
-        QgsProject().instance().addMapLayer(pLayer)
-        QgsProject().instance().addMapLayer(pLayer2)
+        QgsProject().instance().addMapLayer(pLayer, False)
+        QgsProject().instance().addMapLayer(pLayer2, False)
         if type == "mountain":
-            QgsProject().instance().addMapLayer(pLayer3)
+            QgsProject().instance().addMapLayer(pLayer3, False)
 
         random_icons = random.sample(marker_filename,len(marker_filename))
         symbol = QgsSvgMarkerSymbolLayer(random_icons[0])
@@ -211,6 +237,14 @@ class BaseStyle:
         pLayer2.renderer().symbol().changeSymbolLayer(0, symbol2 )
         if type == "mountain":
             pLayer3.renderer().symbol().changeSymbolLayer(0, symbol3 )
+
+        root = QgsProject.instance().layerTreeRoot()
+        group = root.findGroup(f'Epic Maps {self.stylesettings.mapstyle} - {self.stylesettings.title}')
+        group.addLayer(pLayer)
+        group.addLayer(pLayer2)
+        if type == "mountain":
+            group.addLayer(pLayer3)
+
 
     def restyleLine(self, vectorLayer, colors, width, style='solid'):
         lines_symbol = QgsLineSymbol.createSimple({'line_color': colors, \

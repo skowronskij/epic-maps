@@ -96,8 +96,9 @@ class EpicMapsDialog(QDialog, FORM_CLASS):
     def generateLayout(self):
         self.close()
         layer_style_map = self.titleAuthorOptionsWidget.getLayerStyleMap()
+        self.createGroup()
+        self.addLayersToTOC()
         self.currentStyle.testing(layer_style_map)
-        self.addLayersToTOC()        
 
     def setMessage(self, message: str):
         self.lbMessage.setText(message)
@@ -105,15 +106,16 @@ class EpicMapsDialog(QDialog, FORM_CLASS):
     def addLayersToTOC(self):
         layers = self.styleSettings.layers
         root = QgsProject.instance().layerTreeRoot()
-        group = root.addGroup(f'Epic Maps {self.styleSettings.mapstyle} - {self.styleSettings.title}')
+        group = root.findGroup(f'Epic Maps {self.styleSettings.mapstyle} - {self.styleSettings.title}')
         for geom_type, layers in layers.items():
             for layer in layers.keys():
                 copy = layer.clone()
-                layer.saveNamedStyle(os.path.join(os.path.dirname(os.path.abspath(__file__)),"style.qml"))
                 copy.dataProvider().addFeatures(layer.getFeatures())
                 copy.updateExtents(True)
-                copy.loadNamedStyle(os.path.join(os.path.dirname(os.path.abspath(__file__)),"style.qml"))
                 QgsProject.instance().addMapLayer(copy, False)
                 group.addLayer(copy)
                 copy.triggerRepaint()
                 
+    def createGroup(self):
+        root = QgsProject.instance().layerTreeRoot()
+        group = root.addGroup(f'Epic Maps {self.styleSettings.mapstyle} - {self.styleSettings.title}')
