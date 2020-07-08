@@ -66,12 +66,13 @@ class FantasyStyle(BaseStyle):
         self.restyleLine(vectorLayer, colors, '0.5')
         vectorLayer.triggerRepaint()
 
-    def testing(self, layer_style_map):
+    def testing(self, layer_style_map, copies):
         for layer, style in layer_style_map.items():
-            layer_type = self.getLayerType(layer)
+            copy = copies[layer.name()]
+            layer_type = self.getLayerType(copy)
             method_name = f'style{layer_type}{style}'
             method = getattr(self, method_name)
-            method(layer)
+            method(copy)
         self._create_landscape_layout()
 
     def getLayerType(self, layer):
