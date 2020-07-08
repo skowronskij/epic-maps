@@ -66,14 +66,22 @@ class FantasyStyle(BaseStyle):
         self.restyleLine(vectorLayer, colors, '0.5')
         vectorLayer.triggerRepaint()
 
-    def testing(self, layer_style_map, copies):
+    def testing(self, layer_style_map):
+        root = QgsProject.instance().layerTreeRoot()
+        group = root.findGroup(f'Epic Maps {self.stylesettings.mapstyle} - {self.stylesettings.title}')
         for layer, style in layer_style_map.items():
-            copy = copies[layer.name()]
+            copy = layer.clone()
+            copy.updateExtents(True)
             layer_type = self.getLayerType(copy)
             method_name = f'style{layer_type}{style}'
             method = getattr(self, method_name)
             method(copy)
+            if style not in ("Mountains","Forests"):
+                QgsProject.instance().addMapLayer(copy, False)
+                group.addLayer(copy)
+                copy.triggerRepaint()
         self._create_landscape_layout()
+        # return copies
 
     def getLayerType(self, layer):
         if layer.geometryType() == QgsWkbTypes.PointGeometry:

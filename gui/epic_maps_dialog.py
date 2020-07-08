@@ -97,27 +97,29 @@ class EpicMapsDialog(QDialog, FORM_CLASS):
         self.close()
         layer_style_map = self.titleAuthorOptionsWidget.getLayerStyleMap()
         self.createGroup()
-        copies = self.addLayersToTOC()
-        self.currentStyle.testing(layer_style_map, copies)
+        # copies = self.addLayersToTOC()
+        copies = self.currentStyle.testing(layer_style_map)
+        # self.addLayersToTOC(copies)
 
     def setMessage(self, message: str):
         self.lbMessage.setText(message)
 
-    def addLayersToTOC(self):
-        layers = self.styleSettings.layers
+    def addLayersToTOC(self, layers):
+        # layers = self.styleSettings.layers
         root = QgsProject.instance().layerTreeRoot()
         group = root.findGroup(f'Epic Maps {self.styleSettings.mapstyle} - {self.styleSettings.title}')
-        copys = {}
-        for geom_type, layers in layers.items():
-            for layer in layers.keys():
-                copy = layer.clone()
-                # copy.dataProvider().addFeatures(layer.getFeatures())
-                copy.updateExtents(True)
-                QgsProject.instance().addMapLayer(copy, False)
-                group.addLayer(copy)
-                copy.triggerRepaint()
-                copys[copy.name()] = copy
-        return copys
+        # copys = {}
+        # for geom_type, layers in layers.items():
+            # for layer in layers.keys():
+                # copy = layer.clone()
+                # # copy.dataProvider().addFeatures(layer.getFeatures())
+                # copy.updateExtents(True)
+        for copy in layers:
+            QgsProject.instance().addMapLayer(copy, False)
+            group.addLayer(copy)
+            copy.triggerRepaint()
+                # copys[copy.name()] = copy
+        # return copys
                 
     def createGroup(self):
         root = QgsProject.instance().layerTreeRoot()
