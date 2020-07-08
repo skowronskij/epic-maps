@@ -191,10 +191,10 @@ class BaseStyle:
 
             def layer_create(layer): #TODO TO POWINNA BYĆ METODA
                 if type == "forest":
-                    number_of_points = random.randint(int(round(polygon_transformed.area()*1000 )*0.85),int(round(polygon_transformed.area()*1000)*1.15)) 
+                    number_of_points = random.randint(int(round(polygon_transformed.area()*500 )*0.85),int(round(polygon_transformed.area()*500)*1.15)) 
                     #TODO 1000 powinno być argumentem funkcji
                 elif type == "mountain":
-                    number_of_points = random.randint(int(round(polygon_transformed.area()*100)*0.85),int(round(polygon_transformed.area()*100)*1.15))
+                    number_of_points = random.randint(int(round(polygon_transformed.area()*50)*0.85),int(round(polygon_transformed.area()*50)*1.15))
                 if number_of_points > 10000: #TODO przemyśleć to
                     number_of_points = 10000
                 while True:

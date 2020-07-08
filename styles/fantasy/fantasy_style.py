@@ -37,13 +37,13 @@ class FantasyStyle(BaseStyle):
 
     def stylePointTowns(self,vectorLayer):
         self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","city_small.svg"))
-        self.symbol.setSize(16)
+        self.symbol.setSize(10)
         vectorLayer.renderer().symbol().changeSymbolLayer(0, self.symbol )
         vectorLayer.triggerRepaint()
 
     def stylePointBattles(self,vectorLayer):
         self.symbol = QgsSvgMarkerSymbolLayer(os.path.join(os.path.dirname(os.path.abspath(__file__)),"resources","battle_swords.svg"))
-        self.symbol.setSize(10)
+        self.symbol.setSize(8)
         vectorLayer.renderer().symbol().changeSymbolLayer(0, self.symbol )
         vectorLayer.triggerRepaint()
 
