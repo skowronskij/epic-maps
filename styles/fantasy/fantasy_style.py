@@ -1,6 +1,7 @@
 from ..base_style import BaseStyle
 from qgis.core import *
 from qgis.gui import *
+from PyQt5.QtGui import QColor
 
 import processing
 import os

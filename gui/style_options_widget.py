@@ -6,6 +6,7 @@ from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import QWidget
 
 from ..styles.styles_container import STYLE_DICT, StylesContainer
+from ..models.layerTypeModel import LayerTypeModel, LayerTypeDelegate
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'style_options_widget.ui'))
@@ -39,4 +40,5 @@ class StyleOpstionsWidget(QWidget, FORM_CLASS):
     def setStyle(self, text):
         self.styleSettings.mapstyle = text
         self.parent.currentStyle = StylesContainer(self.styleSettings).get_style
+
        

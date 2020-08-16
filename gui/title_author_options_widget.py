@@ -15,16 +15,14 @@ class TitleAuthorOptionsWidget(QWidget, FORM_CLASS):
     def __init__(self, parent, parents=None):
         super(TitleAuthorOptionsWidget, self).__init__(parents)
         self.setupUi(self)
-
         self.parent = parent
         self.styleSettings = self.parent.styleSettings
-        model = LayerTypeModel()
-        self.tvLayersType.setModel(model)
-        self.tvLayersType.setItemDelegate(LayerTypeDelegate(self.parent.currentStyle.stylesettings.types, model, self))
-
         self.connectSignals()
 
     def show(self):
+        model = LayerTypeModel()
+        self.tvLayersType.setModel(model)
+        self.tvLayersType.setItemDelegate(LayerTypeDelegate(self.parent.currentStyle.stylesettings.types, model, self))
         self.setLayerList()
         super(TitleAuthorOptionsWidget, self).show()
 

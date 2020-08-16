@@ -1,6 +1,8 @@
 from .fantasy.fantasy_style import FantasyStyle
+from .topography.topography_style import TopographyStyle
 
-STYLE_DICT = {"Fantasy": FantasyStyle}
+STYLE_DICT = {"Fantasy": FantasyStyle, "Topography": TopographyStyle}
+#STYLE_DICT = {"Topography": TopographyStyle}
 
 class StylesContainer:
 
